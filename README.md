@@ -6,18 +6,54 @@ pane and follows it as you switch panes or `cd` around.
 
 ## Install
 
+With Kelpi running:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/andymarcus/kelpi-plugin-filetree/main/install.sh | sh
+```
+
+Then go to **Settings → Plugins → Workbench views** and set the right sidebar
+(`sidebar.secondary`) or the left one (`sidebar.primary`) to **File Tree**.
+
+Run the same command again to update. To install a particular version, set `FILETREE_VERSION`:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/andymarcus/kelpi-plugin-filetree/main/install.sh | FILETREE_VERSION=v1.0.0 sh
+```
+
+The script:
+- downloads the latest release's package from GitHub
+- checks it against the release's SHA-256 checksum
+- validates it with `kelpi plugin validate`
+- installs it with `kelpi plugin install --trust`
+
+[Read it first](install.sh) if you prefer. Plugins run with your account's access, and
+`--trust` confirms you're fine with that. The checksum catches a corrupted download, not a
+tampered release.
+
+### Without the script
+
+Download `kelpi-plugin-filetree.kelpi-plugin` from the
+[latest release](https://github.com/andymarcus/kelpi-plugin-filetree/releases/latest), then:
+
+```sh
+kelpi plugin install kelpi-plugin-filetree.kelpi-plugin --trust
+```
+
+### From source
+
 ```sh
 git clone https://github.com/andymarcus/kelpi-plugin-filetree.git
 kelpi plugin install ./kelpi-plugin-filetree --trust
 ```
 
-Plugins run with your account's access, so read the code before installing it. `--trust`
-confirms that you have.
-
-Then go to **Settings → Plugins → Workbench views** and set the right sidebar
-(`sidebar.secondary`) or the left one (`sidebar.primary`) to **File Tree**.
-
 To pick up edits while you work, use `kelpi plugin dev . --trust`.
+
+### Publishing a release
+
+1. Bump `version` in `kelpi.plugin.json`.
+2. Commit and push.
+3. Run `scripts/release.sh`. It packs the committed tree, tags it, and creates a GitHub release with the package and its checksum, which is where the install command looks.
 
 ## How it follows you
 
