@@ -94,3 +94,7 @@ Drag a file or folder from the tree into a terminal pane to drop in its path, qu
 
 - Listings show up to 3,000 entries per folder. Item counts are skipped in folders with more than 400 subfolders.
 - Search keeps up to 3 folder indexes, rebuilt at most every 3 s while files change. It indexes up to 60,000 entries breadth first and skips paths over 1,024 characters. It never descends into `.git`, `node_modules`, `.venv` or similar build and cache folders.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
