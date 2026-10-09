@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>File Tree</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="categories.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="shell">
+    <header class="header">
+      <div class="title-row">
+        <span class="root-icon" aria-hidden="true"></span>
+        <h1 id="root-name" class="root-name">File Tree</h1>
+        <div class="tools" role="toolbar" aria-label="File tree actions">
+          <button id="btn-search" class="tool" type="button" aria-label="Search files" data-tip="Search  /"></button>
+          <button id="btn-hidden" class="tool" type="button" aria-label="Show hidden files" aria-pressed="true" data-tip="Hidden files  ."></button>
+          <button id="btn-collapse" class="tool" type="button" aria-label="Collapse all folders" data-tip="Collapse all"></button>
+          <button id="btn-pin" class="tool" type="button" aria-label="Pin this folder" aria-pressed="false" data-tip="Pin folder  p"></button>
+        </div>
+      </div>
+      <div class="sub-row">
+        <p id="root-path" class="root-path" title=""></p>
+        <span id="pin-badge" class="badge" hidden>Pinned</span>
+      </div>
+      <div id="search-bar" class="search-bar" hidden>
+        <span class="search-glyph" aria-hidden="true"></span>
+        <input id="search-input" type="text" spellcheck="false" autocomplete="off" placeholder="Search files and folders" aria-label="Search files and folders" aria-controls="results" aria-autocomplete="list">
+        <button id="search-close" class="tool small" type="button" aria-label="Close search" data-tip="Close  Esc"></button>
+      </div>
+    </header>
+
+    <main class="body">
+      <div id="tree" class="tree" role="tree" tabindex="0" aria-label="Files">
+        <div id="spacer" class="spacer"></div>
+      </div>
+      <div id="results" class="results" role="listbox" aria-label="Search results" hidden></div>
+      <div id="state" class="state" hidden>
+        <span id="state-icon" class="state-icon" aria-hidden="true"></span>
+        <p id="state-title" class="state-title"></p>
+        <p id="state-detail" class="state-detail"></p>
+        <button id="state-action" class="state-action" type="button" hidden></button>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p id="search-note" class="search-note" hidden></p>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+    </footer>
+  </div>
+
+  <div id="menu" class="menu" role="menu" hidden></div>
+  <div id="help" class="help" role="dialog" aria-label="Keyboard shortcuts" hidden></div>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+{
+  "id": "andymarcus.filetree",
+  "name": "File Tree",
+  "version": "1.0.0",
+  "apiVersion": 1,
+  "trust": "full",
+  "backend": "backend.mjs",
+  "activation": "on-demand",
+  "contributes": {
+    "views": [
+      {
+        "id": "andymarcus.filetree.tree",
+        "title": "File Tree",
+        "entry": "ui/index.html",
+        "stateVersion": 1,
+        "placements": ["sidebar.secondary", "sidebar.primary"]
+      }
+    ],
+    "commands": [],
+    "services": [
+      {
+        "id": "andymarcus.filetree.fs",
+        "title": "File Tree filesystem",
+        "version": 1,
+        "methods": ["info", "resolveCwd", "list", "search", "watch", "release", "copy", "sniff", "openExternal"]
+      }
+    ],
+    "providers": [
+      {
+        "id": "andymarcus.filetree.fs.node",
+        "title": "File Tree (Node)",
+        "service": "andymarcus.filetree.fs",
+        "version": 1,
+        "timeoutMs": 15000,
+        "methods": ["info", "resolveCwd", "list", "search", "watch", "release", "copy", "sniff", "openExternal"]
+      }
+    ],
+    "settings": {}
+  }
+}
