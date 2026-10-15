@@ -1,0 +1,12 @@
+{
+  "name": "kelpi-plugin-filetree",
+  "private": true,
+  "description": "Development scripts for the File Tree Kelpi plugin. The plugin itself needs no build or dependencies.",
+  "license": "MIT",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test \"test/*.test.mjs\"",
+    "check": "node scripts/check.mjs",
+    "harness": "node test/harness/server.mjs"
+  }
+}
