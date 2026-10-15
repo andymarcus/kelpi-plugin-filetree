@@ -1,7 +1,7 @@
 {
   "id": "andymarcus.filetree",
   "name": "File Tree",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "apiVersion": 1,
   "trust": "full",
   "backend": "backend.mjs",
@@ -16,13 +16,41 @@
         "placements": ["sidebar.secondary", "sidebar.primary"]
       }
     ],
-    "commands": [],
+    "commands": [
+      { "id": "andymarcus.filetree.focus", "title": "Focus File Tree" },
+      { "id": "andymarcus.filetree.search", "title": "Search Files by Name…" },
+      { "id": "andymarcus.filetree.search-content", "title": "Search in Files…" },
+      { "id": "andymarcus.filetree.reveal", "title": "Reveal in File Tree" },
+      { "id": "andymarcus.filetree.new-file", "title": "New File…" },
+      { "id": "andymarcus.filetree.new-folder", "title": "New Folder…" },
+      { "id": "andymarcus.filetree.collapse-all", "title": "Collapse All Folders" },
+      { "id": "andymarcus.filetree.refresh", "title": "Refresh File Tree" },
+      { "id": "andymarcus.filetree.toggle-hidden", "title": "Show or Hide Hidden Files" },
+      { "id": "andymarcus.filetree.toggle-ignored", "title": "Show or Hide Git-Ignored Files" },
+      { "id": "andymarcus.filetree.toggle-pin", "title": "Pin or Unpin the File Tree Folder" },
+      { "id": "andymarcus.filetree.undo", "title": "Undo Last File Change" }
+    ],
+    "menus": [
+      { "id": "andymarcus.filetree.palette.focus", "command": "andymarcus.filetree.focus", "placement": "palette" },
+      { "id": "andymarcus.filetree.palette.search", "command": "andymarcus.filetree.search", "placement": "palette" },
+      { "id": "andymarcus.filetree.palette.search-content", "command": "andymarcus.filetree.search-content", "placement": "palette" },
+      { "id": "andymarcus.filetree.palette.reveal", "command": "andymarcus.filetree.reveal", "placement": "palette" },
+      { "id": "andymarcus.filetree.palette.new-file", "command": "andymarcus.filetree.new-file", "placement": "palette" },
+      { "id": "andymarcus.filetree.palette.new-folder", "command": "andymarcus.filetree.new-folder", "placement": "palette" },
+      { "id": "andymarcus.filetree.palette.collapse-all", "command": "andymarcus.filetree.collapse-all", "placement": "palette" },
+      { "id": "andymarcus.filetree.palette.refresh", "command": "andymarcus.filetree.refresh", "placement": "palette" },
+      { "id": "andymarcus.filetree.palette.toggle-hidden", "command": "andymarcus.filetree.toggle-hidden", "placement": "palette" },
+      { "id": "andymarcus.filetree.palette.toggle-ignored", "command": "andymarcus.filetree.toggle-ignored", "placement": "palette" },
+      { "id": "andymarcus.filetree.palette.toggle-pin", "command": "andymarcus.filetree.toggle-pin", "placement": "palette" },
+      { "id": "andymarcus.filetree.palette.undo", "command": "andymarcus.filetree.undo", "placement": "palette" },
+      { "id": "andymarcus.filetree.pane.reveal", "command": "andymarcus.filetree.reveal", "placement": "pane", "group": "file-tree" }
+    ],
     "services": [
       {
         "id": "andymarcus.filetree.fs",
         "title": "File Tree filesystem",
         "version": 1,
-        "methods": ["info", "resolveCwd", "list", "search", "watch", "release", "copy", "sniff", "openExternal"]
+        "methods": ["info", "resolveCwd", "list", "search", "grep", "watch", "release", "copy", "sniff", "preview", "openExternal", "create", "move", "duplicate", "trash", "restore"]
       }
     ],
     "providers": [
@@ -31,10 +59,75 @@
         "title": "File Tree (Node)",
         "service": "andymarcus.filetree.fs",
         "version": 1,
-        "timeoutMs": 15000,
-        "methods": ["info", "resolveCwd", "list", "search", "watch", "release", "copy", "sniff", "openExternal"]
+        "timeoutMs": 30000,
+        "methods": ["info", "resolveCwd", "list", "search", "grep", "watch", "release", "copy", "sniff", "preview", "openExternal", "create", "move", "duplicate", "trash", "restore"]
       }
     ],
-    "settings": {}
+    "settingGroups": [
+      { "id": "andymarcus.filetree.display", "title": "Display", "order": 1 },
+      { "id": "andymarcus.filetree.git", "title": "Git", "order": 2 },
+      { "id": "andymarcus.filetree.behaviour", "title": "Behaviour", "order": 3 }
+    ],
+    "settings": {
+      "showHidden": {
+        "title": "Show hidden files",
+        "description": "Files and folders whose names start with a dot. Toggle with the . key.",
+        "type": "boolean", "default": true, "group": "andymarcus.filetree.display", "order": 1
+      },
+      "sort": {
+        "title": "Sort by",
+        "description": "Date modified and size put the newest and largest first. Cycle with the s key.",
+        "type": "string", "default": "name", "enum": ["name", "modified", "size", "type"], "group": "andymarcus.filetree.display", "order": 2
+      },
+      "foldersFirst": {
+        "title": "Folders first",
+        "type": "boolean", "default": true, "group": "andymarcus.filetree.display", "order": 3
+      },
+      "exclude": {
+        "title": "Always hide",
+        "description": "Comma-separated names or globs that never show, such as .DS_Store, *.pyc or dist/cache. A pattern with a slash matches from the tree's top folder.",
+        "type": "string", "default": ".DS_Store, Thumbs.db", "group": "andymarcus.filetree.display", "order": 4
+      },
+      "hoverPreview": {
+        "title": "Preview on hover",
+        "description": "Show size, dates and the first lines of a file when you rest the pointer on it. Space shows it for the selected row.",
+        "type": "boolean", "default": true, "group": "andymarcus.filetree.display", "order": 5
+      },
+      "highlightSeconds": {
+        "title": "Highlight changed files (seconds)",
+        "description": "How long a file that just changed on disk stays highlighted, such as one an agent wrote. 0 turns this off.",
+        "type": "number", "default": 8, "min": 0, "max": 120, "group": "andymarcus.filetree.display", "order": 6
+      },
+      "gitStatus": {
+        "title": "Show git status",
+        "description": "Badges for changed files and dots on folders with changes inside.",
+        "type": "boolean", "default": true, "group": "andymarcus.filetree.git", "order": 1
+      },
+      "hideIgnored": {
+        "title": "Hide git-ignored files",
+        "description": "When off, ignored files show dimmed. Toggle with Shift-I.",
+        "type": "boolean", "default": false, "group": "andymarcus.filetree.git", "order": 2
+      },
+      "followActiveFile": {
+        "title": "Select the focused document's file",
+        "description": "When a Markdown, CSV or diff pane gets focus, select its file in the tree.",
+        "type": "boolean", "default": true, "group": "andymarcus.filetree.behaviour", "order": 1
+      },
+      "confirmTrash": {
+        "title": "Ask before moving to the Trash",
+        "description": "Either way, Undo (u) puts items back.",
+        "type": "boolean", "default": true, "group": "andymarcus.filetree.behaviour", "order": 2
+      },
+      "editor": {
+        "title": "Editor command",
+        "description": "Used by Open in Editor. Leave empty to use $VISUAL or $EDITOR from your shell. Example: code --wait",
+        "type": "string", "default": "", "group": "andymarcus.filetree.behaviour", "order": 3
+      },
+      "followInterval": {
+        "title": "Folder check interval (seconds)",
+        "description": "How often a terminal's folder is checked after something changes. It backs off to four times this while the folder stays the same.",
+        "type": "number", "default": 1.5, "min": 0.5, "max": 10, "group": "andymarcus.filetree.behaviour", "order": 4
+      }
+    }
   }
 }

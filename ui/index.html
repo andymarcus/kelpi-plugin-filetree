@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>File Tree</title>
   <link rel="stylesheet" href="style.css">
+  <script src="util.js" defer></script>
   <script src="categories.js" defer></script>
   <script src="app.js" defer></script>
 </head>
@@ -16,9 +17,9 @@
         <h1 id="root-name" class="root-name">File Tree</h1>
         <div class="tools" role="toolbar" aria-label="File tree actions">
           <button id="btn-search" class="tool" type="button" aria-label="Search files" data-tip="Search  /"></button>
-          <button id="btn-hidden" class="tool" type="button" aria-label="Show hidden files" aria-pressed="true" data-tip="Hidden files  ."></button>
-          <button id="btn-collapse" class="tool" type="button" aria-label="Collapse all folders" data-tip="Collapse all"></button>
+          <button id="btn-bookmarks" class="tool" type="button" aria-label="Bookmarks" aria-haspopup="menu" data-tip="Bookmarks  ⇧B"></button>
           <button id="btn-pin" class="tool" type="button" aria-label="Pin this folder" aria-pressed="false" data-tip="Pin folder  p"></button>
+          <button id="btn-more" class="tool" type="button" aria-label="More actions" aria-haspopup="menu" data-tip="More"></button>
         </div>
       </div>
       <div class="sub-row">
@@ -26,15 +27,20 @@
         <span id="pin-badge" class="badge" hidden>Pinned</span>
       </div>
       <div id="search-bar" class="search-bar" hidden>
-        <span class="search-glyph" aria-hidden="true"></span>
+        <button id="search-mode" class="tool small mode" type="button" aria-label="Search file names" data-tip="Switch to text search  Tab"></button>
         <input id="search-input" type="text" spellcheck="false" autocomplete="off" placeholder="Search files and folders" aria-label="Search files and folders" aria-controls="results" aria-autocomplete="list">
+        <button id="search-regex" class="tool small" type="button" aria-label="Regular expression" aria-pressed="false" data-tip="Regular expression" hidden></button>
         <button id="search-close" class="tool small" type="button" aria-label="Close search" data-tip="Close  Esc"></button>
       </div>
     </header>
 
     <main class="body">
-      <div id="tree" class="tree" role="tree" tabindex="0" aria-label="Files">
+      <div id="tree" class="tree" role="tree" aria-multiselectable="true" tabindex="0" aria-label="Files">
         <div id="spacer" class="spacer"></div>
+        <div id="edit" class="edit" hidden>
+          <input id="edit-input" type="text" spellcheck="false" autocomplete="off" aria-label="Name">
+          <p id="edit-error" class="edit-error" role="alert" hidden></p>
+        </div>
       </div>
       <div id="results" class="results" role="listbox" aria-label="Search results" hidden></div>
       <div id="state" class="state" hidden>
@@ -47,12 +53,29 @@
 
     <footer class="footer">
       <p id="search-note" class="search-note" hidden></p>
-      <p id="status" class="status" role="status" aria-live="polite"></p>
+      <div class="status-row">
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+        <button id="branch" class="branch" type="button" hidden></button>
+      </div>
     </footer>
   </div>
 
   <div id="menu" class="menu" role="menu" hidden></div>
   <div id="help" class="help" role="dialog" aria-label="Keyboard shortcuts" hidden></div>
-  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <div id="peek" class="peek" role="tooltip" hidden></div>
+  <div id="dialog-scrim" class="scrim" hidden>
+    <div id="dialog" class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="dialog-title" aria-describedby="dialog-detail">
+      <p id="dialog-title" class="dialog-title"></p>
+      <p id="dialog-detail" class="dialog-detail"></p>
+      <div class="dialog-actions">
+        <button id="dialog-cancel" class="button" type="button">Cancel</button>
+        <button id="dialog-confirm" class="button primary" type="button"></button>
+      </div>
+    </div>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden>
+    <span id="toast-text" class="toast-text"></span>
+    <button id="toast-action" class="toast-action" type="button" hidden></button>
+  </div>
 </body>
 </html>

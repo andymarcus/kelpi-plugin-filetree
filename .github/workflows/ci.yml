@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        # macOS is where most people run Kelpi; Linux checks the /proc and grep fallbacks.
+        os: [macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm run check
+      - run: npm test
+
+  version:
+    # A pull request that changes the plugin must also raise its version, or the release
+    # script would refuse to publish it.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check the version was bumped
+        run: |
+          base=${{ github.event.pull_request.base.sha }}
+          if git diff --quiet "$base" HEAD -- backend.mjs lib ui kelpi.plugin.json; then
+            echo "No plugin files changed."; exit 0
+          fi
+          old=$(git show "$base:kelpi.plugin.json" | node -p "JSON.parse(require('fs').readFileSync(0, 'utf8')).version")
+          new=$(node -p "require('./kelpi.plugin.json').version")
+          node -e "
+            const [a, b] = process.argv.slice(1).map(v => v.split('-')[0].split('.').map(Number));
+            const newer = b[0] - a[0] || b[1] - a[1] || b[2] - a[2];
+            if (newer <= 0) { console.error('kelpi.plugin.json version ' + process.argv[2] + ' must be higher than ' + process.argv[1]); process.exit(1); }
+          " "$old" "$new"
+          echo "Version $old -> $new"
